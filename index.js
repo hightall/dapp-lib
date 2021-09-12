@@ -11,7 +11,6 @@ export default class Dapp {
     this._client = null;
     this._networks = availableNetworks;
     if (!extension) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       this.initBinanceChainWallet() || this.initMetaMask();
     } else if (extension === 'BinanceChainWallet') {
       this.initBinanceChainWallet();

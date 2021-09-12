@@ -1,6 +1,6 @@
 {
   "name": "@hightall/dapp-lib",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "dapp library support multi client",
   "main": "index.js",
   "scripts": {
