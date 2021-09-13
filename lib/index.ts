@@ -1,22 +1,22 @@
 import networks from './networks';
 import MetaMask from './BrowserExtension/MetaMask';
-// import Wallet from './BrowserExtension/WalletConnect';
+import WalletConnect from './BrowserExtension/WalletConnect';
 import Client from './Client';
-import BaseBrowserExtension from './BrowserExtension/BaseBrowserExtension';
 
 export default class Dapp {
   _client: any;
   _networks: Network[];
-  _browserExtension?: MetaMask;
+  _browserExtension?: MetaMask | WalletConnect;
 
-  constructor(extension: string, availableNetworks: Network[] = networks) {
+  constructor(options: DappProps) {
     // eslint-disable-next-line no-underscore-dangle
+    const { extension, availableNetworks = networks, providerOptions = {} } = options;
     this._client = null;
     this._networks = availableNetworks;
     if (!extension || extension === 'MetaMask') {
       this._initMetaMask();
-    // } else if (extension === 'WalletConnect') {
-    //   this._initWalletConnect();
+    } else if (extension === 'WalletConnect') {
+      this._initWalletConnect(providerOptions);
     }
 
     // eslint-disable-next-line no-underscore-dangle
@@ -26,9 +26,7 @@ export default class Dapp {
   }
 
   _initMetaMask() {
-    console.log('will init metamask')
     if (window.ethereum && window.ethereum.isMetaMask) {
-      console.log(window.ethereum);
       this._browserExtension = new MetaMask({
         ethereum: window.ethereum,
       });
@@ -36,12 +34,14 @@ export default class Dapp {
     }
   }
 
-  // _initWalletConnect() {
-  //   this._browserExtension = new Wallet();
-  //   // change provider for wallet connect
-  //   window.ethereum = this._browserExtension?.connector;
-  //   return this._browserExtension;
-  // }
+  _initWalletConnect(providerOptions: any) {
+    this._browserExtension = new WalletConnect({
+      providerOptions
+    });
+    // change provider for wallet connect
+    window.ethereum = this._browserExtension?.connector;
+    return this._browserExtension;
+  }
 
   get browserExtension() { return this._browserExtension }
 
@@ -49,20 +49,15 @@ export default class Dapp {
     return Boolean(this.browserExtension);
   }
 
-  isBrowserExtensionEnabled(): boolean {
-    return this.isBrowserExtensionInstalled && (this.browserExtension?.isEnabled() || false);
+  get isBrowserExtensionEnabled(): boolean {
+    return this.isBrowserExtensionInstalled && (this.browserExtension?.isEnabled || false);
   }
 
   async enableBrowserExtension(networkId = 'test') {
     let chainId: string | undefined = '';
-    // console.log('enable browser extension 1', chainId);
     if (this.isBrowserExtensionInstalled || localStorage.getItem('walletconnect')) {
-      // console.log('enable browser extension 2', chainId);
-      // console.log('network', chainId);
       chainId = await this.browserExtension?.enable(networkId);
-      // console.log('enable browser extension 3', chainId);
     }
-    // console.log('enable browser extension', chainId);
     this.initRpcFromChainId(chainId || '');
     return chainId || '';
   }
@@ -71,7 +66,7 @@ export default class Dapp {
     return this.isBrowserExtensionInstalled && this.browserExtension?.onEnabled(callback);
   }
 
-  network() {
+  get network() {
     return this.isBrowserExtensionInstalled && this.browserExtension?.getNetwork();
   }
 
@@ -93,11 +88,11 @@ export default class Dapp {
     }
   }
 
-  rpc() { return this._client && this._client.provider }
+  get rpc() { return this._client && this._client.provider }
 
-  explorer() { return this._client && this._client.explorer }
+  get explorer() { return this._client && this._client.explorer }
 
-  currentAccount() {
+  get currentAccount() {
     return this.isBrowserExtensionInstalled && this.browserExtension?.currentAccount;
   }
 
@@ -109,17 +104,17 @@ export default class Dapp {
     return this.isBrowserExtensionInstalled && this.browserExtension?.onDisconnect(callback);
   }
 
-  async getAllAccounts() {
-    return this.isBrowserExtensionInstalled && this.browserExtension?.getAllAccounts();
-  }
-
-  async signMessage(message: string) {
-    return this.isBrowserExtensionInstalled && this.browserExtension?.signMessage(message);
-  }
-
-  async signTypedData(typedData: any) {
-    return this.isBrowserExtensionInstalled && this.browserExtension?.signTypedData(typedData);
-  }
+  // async getAllAccounts() {
+  //   return this.isBrowserExtensionInstalled && this.browserExtension?.getAllAccounts();
+  // }
+  //
+  // async signMessage(message: string) {
+  //   return this.isBrowserExtensionInstalled && this.browserExtension?.signMessage(message);
+  // }
+  //
+  // async signTypedData(typedData: any) {
+  //   return this.isBrowserExtensionInstalled && this.browserExtension?.signTypedData(typedData);
+  // }
 
   // async sendTransaction({ from, to, value, ...others }) {
   //   return this.isBrowserExtensionInstalled && this.browserExtension?.sendTransaction({

@@ -64,14 +64,14 @@ export default class MetaMask extends BaseBrowserExtension {
   }
 
   async signMessage(message: string) {
-    return this.ethereum.request({ method: 'eth_sign', params: [this.currentAccount()?.address, message] });
+    return this.ethereum.request({ method: 'eth_sign', params: [this.currentAccount?.address, message] });
   }
 
   async signTypedData(typedData: any) {
     return this.ethereum.request({
       method: 'eth_signTypedData',
-      params: [typedData, this.currentAccount()?.address],
-      from: this.currentAccount()?.address
+      params: [typedData, this.currentAccount?.address],
+      from: this.currentAccount?.address
     });
   }
 

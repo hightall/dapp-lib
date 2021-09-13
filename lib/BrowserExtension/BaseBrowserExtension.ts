@@ -17,6 +17,19 @@ export default class BaseBrowserExtension implements BrowserExtension {
         this.name = props.name;
         this._enabled = props?.enabled || false;
         this.ethereum = props?.ethereum;
+        this.connector = props?.connector;
+    }
+
+    get chainId(): string {
+        return this._chainId || '';
+    }
+
+    get isEnabled(): boolean {
+        return this._enabled;
+    }
+
+    get currentAccount(): WalletAccount | undefined {
+        return this._currentAccount;
     }
 
     setEnabled(enabled: boolean) {
@@ -29,16 +42,22 @@ export default class BaseBrowserExtension implements BrowserExtension {
         return () => this._onEnabled = undefined;
     }
 
-    chainId(): string {
-        return this._chainId || '';
+    onNetworkChanged(callback: any) {
+        this._onNetworkChanged = callback;
+        // eslint-disable-next-line no-return-assign
+        return () => this._onNetworkChanged = undefined;
     }
 
-    isEnabled(): boolean {
-        return this._enabled;
+    onAccountChanged(callback: any) {
+        this._onAccountChanged = callback;
+        // eslint-disable-next-line no-return-assign
+        return () => this._onAccountChanged = undefined;
     }
 
-    currentAccount(): WalletAccount | undefined {
-        return this._currentAccount;
+    onDisconnect(callback: any) {
+        this._onDisconnect = callback;
+        // eslint-disable-next-line no-return-assign
+        return () => this._onDisconnect = undefined;
     }
 
     getNetwork(chainId: string = this._chainId || ''): any {

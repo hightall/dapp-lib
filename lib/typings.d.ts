@@ -32,11 +32,17 @@ declare type BrowserExtensionProps = {
     name: string;
     ethereum?: any;
     enabled?: boolean;
+    connector?: any;
 }
 
 declare type WalletProps = {
     wallet?: any;
     ethereum?: any;
+    connector?: any;
+}
+
+declare type WalletConnectProps = WalletProps & {
+    providerOptions?: any;
 }
 
 declare type WalletAccount = {
@@ -59,12 +65,12 @@ declare interface BrowserExtension {
     // constructor(props: BrowserExtensionProps);
 
     // whether extension is enabled
-    readonly isEnabled: () => boolean;
+    readonly isEnabled: boolean;
 
     // get the chain id of network
-    readonly chainId: () => string;
+    readonly chainId: string;
 
-    readonly currentAccount: () => WalletAccount | undefined;
+    readonly currentAccount: WalletAccount | undefined;
 
     onNetworkChanged?: (callback: any) => void;
 
@@ -94,4 +100,10 @@ declare interface BrowserExtension {
 declare type ClientProps = {
     url: string;
     explorer: string;
+}
+
+declare type DappProps = {
+    extension: string;
+    availableNetworks?: Network[];
+    providerOptions?: any;
 }
