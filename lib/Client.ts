@@ -1,78 +1,75 @@
-import { ethers } from 'ethers';
+import {ethers} from 'ethers';
 import qs from 'qs';
 // import { getEnv } from '@/utils/config';
 
 export default class Client {
-  constructor({ url, explorer }) {
+  provider: any;
+  explorer: any;
+
+  constructor({ url, explorer }: ClientProps) {
     this.provider = new ethers.providers.Web3Provider(window.ethereum);
     this.explorer = new Explorer(explorer);
   }
 
-  async getAccount(address) {
+  async getAccount(address: string) {
     const balance = await this.provider.getBalance(address);
     const code = await this.provider.getCode(address);
     const codeHash = ethers.utils.keccak256(code);
     return { balance, codeHash };
   }
 
-  async executeContract(address, abi, method, parameters = [], overrides = {}) {
+  async executeContract(address: string, abi: any, method: string, parameters = [], overrides = {}) {
     const contract = new ethers.Contract(address, abi, this.provider.getSigner());
-    const tx = await contract[method](...parameters, overrides);
-    return tx;
+    return await contract[method](...parameters, overrides);
   }
 
-  async approve(address, abi, opAddress, amount) {
+  async approve(address: string, abi: any, opAddress: string, amount: any) {
     const contract = new ethers.Contract(address, abi, this.provider.getSigner());
-    const txHash = contract.functions.approve(opAddress, amount);
-    return txHash;
+    return contract.functions.approve(opAddress, amount);
   }
 
-  async swap(address, abi, amount) {
+  async swap(address: string, abi: any, amount: any) {
     const contract = new ethers.Contract(address, abi, this.provider.getSigner());
-    const txHash = contract.functions.swap(amount);
-    return txHash;
+    return contract.functions.swap(amount);
   }
 
-  async stake(address, abi, pid) {
+  async stake(address: string, abi: any, pid: any) {
     const contract = new ethers.Contract(address, abi, this.provider.getSigner());
-    const txHash = contract.functions.stake(pid);
-    return txHash;
+    return contract.functions.stake(pid);
   }
 
-  async harvest(address, abi, pid, index) {
+  async harvest(address: string, abi: any, pid: any, index: number) {
     const contract = new ethers.Contract(address, abi, this.provider.getSigner());
-    const txHash = contract.functions.harvest(pid, index);
-    return txHash;
+    return contract.functions.harvest(pid, index);
   }
 
-  async forceWithdraw(address, abi, pid, index) {
+  async forceWithdraw(address: string, abi: any, pid: any, index: number) {
     const contract = new ethers.Contract(address, abi, this.provider.getSigner());
-    const txHash = contract.functions.forceWithdraw(pid, index);
-    return txHash;
+    return contract.functions.forceWithdraw(pid, index);
   }
 
-  getBalance = async(address, tokenAddress, abi, unit) => {
+  getBalance = async(address: string, tokenAddress: string, abi: any, unit: number) => {
     let balance = null;
     const contract = new ethers.Contract(tokenAddress, abi, this.provider);
-    await contract.functions.balanceOf(address).then(async(res) => {
+    await contract.functions.balanceOf(address).then(async(res: any) => {
       balance = ethers.utils.formatUnits(res.toString(), unit);
     });
     return balance;
   }
 
-  getName = async(address, abi) => {
+  getName = async(address: string, abi: any) => {
     let name = null;
     const contract = new ethers.Contract(address, abi, this.provider);
-    await contract.functions.name().then(async(res) => {
+    await contract.functions.name().then(async(res: any) => {
       name = res.toString();
     });
     return name;
   }
 
-  getAllowance = async(address, tokenAddress, optAddress, abi, unit) => {
+  getAllowance = async(address: string, tokenAddress: string, optAddress: string, abi: any, unit: any) => {
     let allowance = null;
     const contract = new ethers.Contract(tokenAddress, abi, this.provider);
-    await contract.functions.allowance(address, optAddress).then(async(res) => {
+    await contract.functions.allowance(address, optAddress).then(async(res: any) => {
       allowance = ethers.utils.formatUnits(res.toString(), unit);
     });
     return allowance;
@@ -118,7 +115,7 @@ export default class Client {
   //   return stakeHis;
   // }
 
-  async getTransactions(address, page, size) {
+  async getTransactions(address: string, page: number, size: number) {
     const result = await this.explorer.getHistory(address, page, size);
     return {
       length: 0,
@@ -127,27 +124,29 @@ export default class Client {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  parseUnits(ether, num) {
+  parseUnits(ether: any, num: number) {
     return ethers.utils.parseUnits(ether, num);
   }
 
   // eslint-disable-next-line class-methods-use-this
-  formatUnits(ether, num) {
+  formatUnits(ether: any, num: number) {
     return ethers.utils.formatUnits(ether, num);
   }
 
   // eslint-disable-next-line class-methods-use-this
-  parseEther(ether) {
+  parseEther(ether: any) {
     return ethers.utils.parseEther(ether);
   }
 }
 
 class Explorer {
-  constructor(url) {
+  url: string;
+
+  constructor(url: string) {
     this.url = url;
   }
 
-  async getHistory(address, page = 0, size = 10) {
+  async getHistory(address: string, page = 0, size = 10) {
     const query = {
       module: 'account',
       action: 'txlist',
