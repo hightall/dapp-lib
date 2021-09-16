@@ -124,6 +124,13 @@ export default class Dapp {
   //     ...others
   //   });
   // }
+  async runContractTransactionFunc(address: string, abi: any, funcName: string,...args){
+    return this.runContractTransactionFunc(address, abi, funcName,...args)
+  }
+
+  async queryContract(address: string, abi: any,funcName:string,...args){
+    return this._client.queryContract(address, abi,funcName,...args)
+  }
 
   async executeContract(address: string, abi: any, method: string, parameters = [], overrides = {}) {
     return this._client.executeContract(address, abi, method, parameters, overrides);
@@ -147,6 +154,14 @@ export default class Dapp {
 
   async forceWithdraw(address: string, abi: any, pid: any, index: number) {
     return this._client.forceWithdraw(address, abi, pid, index);
+  }
+
+  getSigner(){
+    return this._client.getSigner()
+  }
+
+  utils(){
+    this._client.getUtils()
   }
 
   getAllowance(address: string, tokenAddress: string, optAddress: string, abi: any, unit = 18) {

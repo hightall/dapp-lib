@@ -18,6 +18,40 @@ export default class Client {
     return { balance, codeHash };
   }
 
+  getUtils(){
+    return ethers.utils
+  }
+
+  getSigner(){
+    return this.provider.getSigner()
+  } 
+
+  /**
+   * general contract method
+   * @param address 
+   * @param abi 
+   * @param funcName : contract function name 
+   * @param args : contract function params
+   * @returns contract function execute result
+   */
+  async runContractTransactionFunc(address: string, abi: any, funcName: string,...args){
+    const contract = new ethers.Contract(address, abi, this.provider.getSigner());
+    return contract.functions[funcName](...args)
+  }
+
+  /**
+   * general contract method
+   * @param address 
+   * @param abi 
+   * @param funcName : contract function name 
+   * @param args : contract function params
+   * @returns query result
+   */
+  async queryContract(address: string, abi: any,funcName:string,...args){
+    const contract = new ethers.Contract(address, abi, this.provider);
+    return contract.functions[funcName](...args)
+  }
+
   async executeContract(address: string, abi: any, method: string, parameters = [], overrides = {}) {
     const contract = new ethers.Contract(address, abi, this.provider.getSigner());
     return await contract[method](...parameters, overrides);
