@@ -124,11 +124,11 @@ export default class Dapp {
   //     ...others
   //   });
   // }
-  async runContractTransactionFunc(address: string, abi: any, funcName: string,...args){
-    return this.runContractTransactionFunc(address, abi, funcName,...args)
+  async runContractTransactionFunc(address: string, abi: any, funcName: string,...args:any[]){
+    return this._client.runContractTransactionFunc(address, abi, funcName,...args)
   }
 
-  async queryContract(address: string, abi: any,funcName:string,...args){
+  async queryContract(address: string, abi: any,funcName:string,...args:any[]){
     return this._client.queryContract(address, abi,funcName,...args)
   }
 
