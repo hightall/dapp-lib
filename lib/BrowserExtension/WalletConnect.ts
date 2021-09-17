@@ -47,7 +47,7 @@ export default class WalletConnect extends BaseBrowserExtension {
   }
 
   async signMessage (message:string) {
-    return await this.connector.request({ method: 'eth_sign', params: [this.currentAccount.address, message] })
+    return await this.connector.request({ method: 'eth_sign', params: [this.currentAccount?.address, message] })
   }
 
   async signTypedData (typedData:any) {
