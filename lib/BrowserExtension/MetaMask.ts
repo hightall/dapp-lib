@@ -75,6 +75,14 @@ export default class MetaMask extends BaseBrowserExtension {
     });
   }
 
+  async personalSign(message: string){
+    return this.ethereum.request({
+      method: 'personal_sign',
+      params: [message, this.currentAccount?.address],
+      from: this.currentAccount?.address
+    });
+  }
+
   async sendTransaction(tx: any) {
     return this.ethereum.request({
       method: 'eth_sendTransaction',

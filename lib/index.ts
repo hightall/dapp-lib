@@ -108,13 +108,17 @@ export default class Dapp {
   //   return this.isBrowserExtensionInstalled && this.browserExtension?.getAllAccounts();
   // }
   //
-  // async signMessage(message: string) {
-  //   return this.isBrowserExtensionInstalled && this.browserExtension?.signMessage(message);
-  // }
-  //
-  // async signTypedData(typedData: any) {
-  //   return this.isBrowserExtensionInstalled && this.browserExtension?.signTypedData(typedData);
-  // }
+  async signMessage(message: string) {
+    return this.isBrowserExtensionInstalled && this.browserExtension?.signMessage(message);
+  }
+  
+  async signTypedData(typedData: any) {
+    return this.isBrowserExtensionInstalled && this.browserExtension?.signTypedData(typedData);
+  }  
+
+  async personalSign(message: string) {
+    return this.isBrowserExtensionInstalled && this.browserExtension?.personalSign(message);
+  }
 
   // async sendTransaction({ from, to, value, ...others }) {
   //   return this.isBrowserExtensionInstalled && this.browserExtension?.sendTransaction({
