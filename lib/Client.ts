@@ -34,7 +34,7 @@ export default class Client {
    * @param args : contract function params
    * @returns contract function execute result
    */
-  async runContractTransactionFunc(address: string, abi: any, funcName: string,...args){
+   async runContractTransactionFunc(address: string, abi: any, funcName: string,...args:any[]){
     const contract = new ethers.Contract(address, abi, this.provider.getSigner());
     return contract.functions[funcName](...args)
   }
@@ -47,7 +47,7 @@ export default class Client {
    * @param args : contract function params
    * @returns query result
    */
-  async queryContract(address: string, abi: any,funcName:string,...args){
+   async queryContract(address: string, abi: any,funcName:string,...args:any[]){
     const contract = new ethers.Contract(address, abi, this.provider);
     return contract.functions[funcName](...args)
   }

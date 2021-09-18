@@ -108,13 +108,17 @@ export default class Dapp {
   //   return this.isBrowserExtensionInstalled && this.browserExtension?.getAllAccounts();
   // }
   //
-  // async signMessage(message: string) {
-  //   return this.isBrowserExtensionInstalled && this.browserExtension?.signMessage(message);
-  // }
-  //
-  // async signTypedData(typedData: any) {
-  //   return this.isBrowserExtensionInstalled && this.browserExtension?.signTypedData(typedData);
-  // }
+  async signMessage(message: string) {
+    return this.isBrowserExtensionInstalled && this.browserExtension?.signMessage(message);
+  }
+  
+  async signTypedData(typedData: any) {
+    return this.isBrowserExtensionInstalled && this.browserExtension?.signTypedData(typedData);
+  }  
+
+  async personalSign(message: string) {
+    return this.isBrowserExtensionInstalled && this.browserExtension?.personalSign(message);
+  }
 
   // async sendTransaction({ from, to, value, ...others }) {
   //   return this.isBrowserExtensionInstalled && this.browserExtension?.sendTransaction({
@@ -124,11 +128,11 @@ export default class Dapp {
   //     ...others
   //   });
   // }
-  async runContractTransactionFunc(address: string, abi: any, funcName: string,...args){
-    return this.runContractTransactionFunc(address, abi, funcName,...args)
+  async runContractTransactionFunc(address: string, abi: any, funcName: string,...args:any[]){
+    return this._client.runContractTransactionFunc(address, abi, funcName,...args)
   }
 
-  async queryContract(address: string, abi: any,funcName:string,...args){
+  async queryContract(address: string, abi: any,funcName:string,...args:any[]){
     return this._client.queryContract(address, abi,funcName,...args)
   }
 

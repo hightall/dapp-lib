@@ -45,4 +45,16 @@ export default class WalletConnect extends BaseBrowserExtension {
       params: [tx]
     });
   }
+
+  async signMessage (message:string) {
+    return await this.connector.request({ method: 'eth_sign', params: [this.currentAccount?.address, message] })
+  }
+
+  async signTypedData (typedData:any) {
+    throw new Error('signTypedData is not supported for ConnectWallet.')
+  }
+
+  async personalSign(message: string){
+    throw new Error('please use signMessage for ConnectWallet.')
+  }
 }
